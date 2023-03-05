@@ -1,0 +1,8 @@
+Django
+djangorestframework
+djangorestframework-simplejwt
+django-model-utils
+djangorestframework
+markdown       # Markdown support for the browsable API.
+django-filter  # Filtering support
+
