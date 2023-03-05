@@ -17,9 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 
 from producto import urls as producto_urls
+from provedor import urls as provedor_urls
+from ventas import urls as ventas_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('producto/', include(producto_urls)),
+    path('provedor/', include(provedor_urls)),
+    path('ventas/', include(ventas_urls)),
 ]

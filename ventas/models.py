@@ -9,7 +9,7 @@ class Factura(models.Model):
     id = models.BigAutoField(primary_key=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     descuento = models.CharField(max_length=10, blank=True)
-    monto_final = models.IntegerField()
+    total = models.IntegerField()
     usuario = models.ForeignKey(
         User, related_name='usuario_factura', on_delete=models.CASCADE)
 
