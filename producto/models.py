@@ -74,9 +74,9 @@ class Stock(models.Model):
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     cantidad = models.IntegerField()
-    producto = models.ManyToManyField(
-        Producto,  related_name='producto_stock')
+    producto = models.ForeignKey(
+        Producto,  on_delete=models.CASCADE)
     punto = models.ForeignKey(Punto,  on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.producto.nombre + ' - ' + str(self.cantidad) + ' - ' + self.punto.nombre)

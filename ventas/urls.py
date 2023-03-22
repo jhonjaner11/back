@@ -12,6 +12,9 @@ from .views import *
 
 
 urlpatterns = [
-    path('ventas', VentaApiView.as_view()),
+    path('list', VentaApiView.as_view()),
+    path('list/<int:factura>', VentaApiView.as_view()),
     path('facturas', FacturaApiView.as_view()),
+    path('facturas/<int:id>', FacturaApiView.as_view()),
+    path('informe/', InformeApiView.as_view()),
 ]

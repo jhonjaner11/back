@@ -21,9 +21,10 @@ class Venta(models.Model):
     id = models.BigAutoField(primary_key=True)
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE)
     descuento = models.CharField(max_length=10, blank=True)
-    producto = models.ManyToManyField(Producto,
-                                      help_text="Producto de la venta",
-                                      related_name='producto_venta')
+    producto = models.ForeignKey(Producto,
+                                 help_text="Producto de la venta",
+                                 related_name='producto_venta',
+                                 on_delete=models.CASCADE)
     cantidad = models.IntegerField(
         help_text="cantidad de productos en la venta")
     precio_unidad = models.IntegerField()

@@ -12,5 +12,5 @@ from .views import *
 
 
 urlpatterns = [
-    path('provedor', ProvedorListApiView.as_view()),
+    path('list', ProvedorListApiView.as_view()),
 ]

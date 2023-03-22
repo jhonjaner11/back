@@ -14,6 +14,8 @@ from .views import *
 urlpatterns = [
     path('list', ProductoListApiView.as_view()),
     path('stock', StockListApiView.as_view()),
+    path('stock/<int:producto>', StockListApiView.as_view()),
+    path('stock/<str:last>', StockListApiView.as_view()),
     path('punto', PuntoListApiView.as_view()),
     path('historico', HistoricoProductoListApiView.as_view()),
     path('categoria', CategoriaListApiView.as_view())

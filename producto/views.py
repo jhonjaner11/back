@@ -5,13 +5,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import permissions
+from rest_framework import filters
 from .models import *
 from .serializers import *
+from rest_framework.permissions import IsAuthenticated
 
 
 class ProductoListApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
@@ -40,6 +42,17 @@ class ProductoListApiView(APIView):
         serializer = ProductoSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+
+            st = Stock()
+            print("cantidad:")
+            print(request.data.get('cantidad'))
+            st.cantidad = request.data.get(
+                'cantidad') if request.data.get('cantidad') else 0
+            # st.cantidad = request.data.get('cantidad')
+            st.producto = Producto.objects.get(pk=serializer.data['id'])
+            st.punto = Punto.objects.get(pk=1)
+            st.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -47,7 +60,7 @@ class ProductoListApiView(APIView):
 
 class StockListApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
@@ -55,8 +68,19 @@ class StockListApiView(APIView):
         List all the todo items for given requested user
         '''
 
-        stock = Stock.objects.all()
-        serializer = StockSerializer(stock, many=True)
+        if 'producto' in kwargs:
+            stock = Stock.objects.filter(producto=kwargs['producto'])
+            serializer = StockSerializer(stock, many=True)
+
+        elif 'last' in kwargs:
+            if kwargs['last'] == 'last':
+                stock = Stock.objects.all().order_by('cantidad')[:5]
+                serializer = StockSerializer(stock, many=True)
+
+        else:
+            stock = Stock.objects.all().order_by('cantidad')
+            serializer = StockSerializer(stock, many=True)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # 2. Create
@@ -80,7 +104,7 @@ class StockListApiView(APIView):
 
 class PuntoListApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
@@ -113,7 +137,7 @@ class PuntoListApiView(APIView):
 
 class HistoricoProductoListApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
@@ -148,7 +172,7 @@ class HistoricoProductoListApiView(APIView):
 
 class CategoriaListApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
