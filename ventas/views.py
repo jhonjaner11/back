@@ -93,7 +93,7 @@ class FacturaApiView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
 
-            facturas = Factura.objects.all()
+            facturas = Factura.objects.all().order_by('-id')
             serializer = FacturaSerializer(facturas, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 

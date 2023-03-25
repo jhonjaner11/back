@@ -14,7 +14,6 @@ class VentaSerializer(serializers.ModelSerializer):
             'factura': instance.factura.id,
             'producto': instance.producto.nombre,
             'cantidad': instance.cantidad,
-
             'precio_unidad': instance.precio_unidad,
             'precio_final': instance.precio_final,
         }
@@ -29,7 +28,7 @@ class FacturaSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         return {
             'id': instance.id,
-            'fecha': instance.fecha_creacion,
+            'fecha': instance.fecha_creacion.strftime("%d-%m-%Y %H:%M"),
             'user': instance.usuario.username,
             'total': instance.total,
         }
