@@ -11,6 +11,8 @@ from .models import *
 from producto.models import Stock
 from .serializers import *
 
+from producto.serializers import *
+
 
 from django.db.models import Sum
 from django.utils import timezone
@@ -190,3 +192,20 @@ class InformeApiView(APIView):
         data['mensual'] = suma_mensual,
 
         return Response(data, status=status.HTTP_200_OK)
+
+
+class StockApiView(APIView):
+    # add permission to check if user is authenticated
+    # permission_classes = [permissions.IsAuthenticated]
+
+    # 1. List all
+    def get(self, request, *args, **kwargs):
+        '''
+        obtiene lael stock de los productos
+        '''
+
+        # try:
+        stock = Stock.objects.all().order_by('cantidad')[:5]
+        serializer = StockSerializer(stock, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
