@@ -43,7 +43,7 @@ class Producto(models.Model):
         Categoria,  related_name='producto_categoria')
 
     def __str__(self):
-        return self.nombre
+        return str(self.id)+' - '+self.nombre
 
 
 class HistoricoProducto(models. Model):

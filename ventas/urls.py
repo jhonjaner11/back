@@ -17,4 +17,7 @@ urlpatterns = [
     path('facturas', FacturaApiView.as_view()),
     path('facturas/<int:id>', FacturaApiView.as_view()),
     path('informe/', InformeApiView.as_view()),
+
+    # todo
+    path('informe/stock/', StockApiView.as_view()),
 ]

@@ -9,6 +9,8 @@ from rest_framework import filters
 from .models import *
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
+from django.http.response import JsonResponse
 
 
 class ProductoListApiView(APIView):
@@ -90,7 +92,7 @@ class StockListApiView(APIView):
         '''
         data = {
             'cantidad': request.data.get('cantidad'),
-            'producto': request.data.get('producto'),
+            'producto': request.data.get('id_producto'),
             'punto': request.data.get('punto'),
         }
 
@@ -100,6 +102,74 @@ class StockListApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # @api_view(['GET', 'PUT', 'DELETE'])
+
+    def put(self, request, **kwargs):
+        print("Requests METHOD")
+        print(request.method)
+        print("kwags")
+        print(kwargs)
+
+        print("request")
+        print(request)
+
+        tutorial_data = JSONParser().parse(request)
+        print(tutorial_data)
+        try:
+            if tutorial_data['id']:
+                print("hay")
+                try:
+                    tutorial = Stock.objects.get(pk=tutorial_data['id'])
+                    print("tutorial")
+                    print(tutorial)
+                    print("camino id")
+                    # prod = Producto.objects.get(
+                    #     pk=tutorial_data['id_producto'])
+
+                    # tutorial_data['producto'] = prod.id
+
+                    tutorial_data['producto'] = tutorial.producto_id
+                    tutorial_data['punto'] = 1
+                except Stock.DoesNotExist:
+                    print("except")
+                    return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        except KeyError:
+            print("No hay")
+            print(tutorial_data)
+            try:
+                tutorial = Stock.objects.get(
+                    producto_id=tutorial_data['id_producto'])
+
+                tutorial_data['producto'] = tutorial.producto_id
+                tutorial_data['punto'] = 1
+            except Stock.DoesNotExist:
+                return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        tutorial_serializer = StockSerializer(
+            tutorial, data=tutorial_data)
+        if tutorial_serializer.is_valid():
+            tutorial_serializer.save()
+            return JsonResponse(tutorial_serializer.data)
+        print("errores")
+        print(tutorial_serializer.errors)
+
+        return JsonResponse(tutorial_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        print("requests")
+        print(request.method)
+        print(kwargs)
+        try:
+            st = Stock.objects.get(pk=kwargs['producto'])
+            print("tutorial")
+            print(st)
+        except Stock.DoesNotExist:
+            return JsonResponse({'message': 'The st does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        st.delete()
+        return JsonResponse({'message': 'st was deleted successfully!'}, status=status.HTTP_204_NO_CONTENT)
 
 
 class PuntoListApiView(APIView):
