@@ -21,3 +21,10 @@ class ProvedorSerializer(serializers.ModelSerializer):
             'correo': instance.correo,
             'pagina_web': instance.pagina_web,
         }
+
+
+class EntregaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Entrega
+        # fields = ['id', 'titulo', 'imagen', 'estreno', 'resumen']
+        fields = '__all__'

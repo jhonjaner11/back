@@ -20,6 +20,30 @@ class Provedor(models.Model):
     correo = models.CharField(max_length=100, blank=True)
     pagina_web = models.CharField(max_length=100, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nombre
+
+
+class Entrega(models.Model):
+
+    periodo_CHOICES = (
+        ('0', 'diario'),
+        ('1', 'semanal'),
+        ('2', 'quincenal'),
+        ('3', 'mensual'),
+        ('4', 'bimensual'),
+        ('5', 'trimensual'),
+        ('6', 'personalizado')
+    )
+
+    fecha = models.DateTimeField()
+    provedor_id = models.ForeignKey(Provedor, on_delete=models.DO_NOTHING)
+    productos = models.JSONField()
+    comentarios = models.CharField(max_length=500, blank=True)
+    periodicidad = models.CharField(max_length=100, choices=periodo_CHOICES)
+    finalizado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.provedor_id) + ' ' + str(self.fecha)
