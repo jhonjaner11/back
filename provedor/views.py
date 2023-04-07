@@ -8,6 +8,10 @@ from rest_framework import permissions
 from .models import *
 from .serializers import *
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser
+from django.http.response import JsonResponse
+
 
 class ProvedorListApiView(APIView):
     # add permission to check if user is authenticated
@@ -79,3 +83,36 @@ class EntregaListApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, **kwargs):
+        
+
+        
+
+        objeto = JSONParser().parse(request)
+        print(objeto)
+      
+        if objeto['id']:
+            print("hay")
+            try:
+                delivery = Entrega.objects.get(pk=objeto['id'])
+                print("objeto:")
+                print(delivery)
+                delivery.finalizado = objeto['finalizado']
+                objeto['provedor_id'] = delivery.provedor_id.id
+                objeto['fecha'] = delivery.fecha
+                
+            except Entrega.DoesNotExist:
+                print("except")
+                return JsonResponse({'message': 'The tutorial does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+        serializer = EntregaSerializer(delivery,
+            data=objeto)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        print("errores:")
+        print(serializer.errors)
+
+        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

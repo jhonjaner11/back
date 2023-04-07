@@ -40,9 +40,9 @@ class Entrega(models.Model):
 
     fecha = models.DateTimeField()
     provedor_id = models.ForeignKey(Provedor, on_delete=models.DO_NOTHING)
-    productos = models.JSONField()
+    productos = models.JSONField(blank=True)
     comentarios = models.CharField(max_length=500, blank=True)
-    periodicidad = models.CharField(max_length=100, choices=periodo_CHOICES)
+    periodicidad = models.CharField(max_length=100, choices=periodo_CHOICES, blank=True)
     finalizado = models.BooleanField(default=False)
 
     def __str__(self):

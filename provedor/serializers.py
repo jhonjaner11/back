@@ -28,3 +28,18 @@ class EntregaSerializer(serializers.ModelSerializer):
         model = Entrega
         # fields = ['id', 'titulo', 'imagen', 'estreno', 'resumen']
         fields = '__all__'
+
+    def to_representation(self, instance):
+        
+        return {
+            'id': instance.id,
+            'periodo': instance.periodo_CHOICES[int(instance.periodicidad)][1],
+            'fecha': instance.fecha.strftime("%d/%m/%Y %H:%M"),
+            'provedor': instance.provedor_id.nombre,
+            'comentario': instance.comentarios,
+            'telefono': instance.provedor_id.telefono,
+            'correo': instance.provedor_id.correo,
+            'pagina_web': instance.provedor_id.pagina_web,
+            'productos': instance.productos,
+            'finalizado': instance.finalizado
+        }

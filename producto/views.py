@@ -106,16 +106,10 @@ class StockListApiView(APIView):
     # @api_view(['GET', 'PUT', 'DELETE'])
 
     def put(self, request, **kwargs):
-        print("Requests METHOD")
-        print(request.method)
-        print("kwags")
-        print(kwargs)
 
-        print("request")
-        print(request)
 
         tutorial_data = JSONParser().parse(request)
-        print(tutorial_data)
+        
         try:
             if tutorial_data['id']:
                 print("hay")
