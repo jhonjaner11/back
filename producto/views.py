@@ -107,9 +107,8 @@ class StockListApiView(APIView):
 
     def put(self, request, **kwargs):
 
-
         tutorial_data = JSONParser().parse(request)
-        
+
         try:
             if tutorial_data['id']:
                 print("hay")
@@ -264,3 +263,56 @@ class CategoriaListApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, **kwargs):
+
+        object_data = JSONParser().parse(request)
+
+        try:
+            if object_data['id']:
+                print("hay")
+                try:
+                    object = Categoria.objects.get(pk=object_data['id'])
+
+                    # object_data['nombre'] = object.nombre
+                    # object_data['descripcion'] = object.descripcion
+                except Categoria.DoesNotExist:
+                    print("except")
+                    return JsonResponse({'message': 'The object does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        except KeyError:
+            print("No hay")
+            print(object_data)
+            try:
+                object = Categoria.objects.get(
+                    producto_id=object_data['id_producto'])
+
+                object_data['producto'] = object.producto_id
+                object_data['punto'] = 1
+            except Categoria.DoesNotExist:
+                return JsonResponse({'message': 'The object does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        object_serializer = CategoriaSerializer(
+            object, data=object_data)
+        if object_serializer.is_valid():
+            object_serializer.save()
+            return JsonResponse(object_serializer.data)
+        print("errores")
+        print(object_serializer.errors)
+
+        return JsonResponse(object_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, **kwargs):
+        print("requests")
+        print(request.method)
+        print(kwargs)
+        try:
+            ct = Categoria.objects.get(pk=kwargs['id'])
+
+            print("Objeto")
+            print(ct)
+            ct.delete()
+        except Stock.DoesNotExist:
+            return JsonResponse({'message': 'The st does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+        return JsonResponse({'message': 'Categoria Eliminada'}, status=status.HTTP_204_NO_CONTENT)

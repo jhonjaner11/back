@@ -20,6 +20,8 @@ urlpatterns = [
 
     path('punto', PuntoListApiView.as_view()),
     path('historico', HistoricoProductoListApiView.as_view()),
-    path('categoria', CategoriaListApiView.as_view())
+
+    path('categoria', CategoriaListApiView.as_view()),
+    path('categoria/<int:id>', CategoriaListApiView.as_view()),
 
 ]

@@ -42,7 +42,6 @@ class StockSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
-        print(instance)
 
         return {
             'id': instance.id,

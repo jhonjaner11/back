@@ -3,7 +3,7 @@ from django.db import models
 from model_utils.models import TimeStampedModel, SoftDeletableModel
 
 from provedor.models import Provedor
-from django.contrib.auth.models import User
+from users.models import User
 
 
 class Categoria(models.Model):

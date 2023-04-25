@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from producto.models import Producto
-from django.contrib.auth.models import User
+from users.models import User
 
 
 class Factura(models.Model):

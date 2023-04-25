@@ -17,7 +17,7 @@ class Provedor(models.Model):
     nombre = models.CharField(max_length=100, help_text="Nombre del producto")
     telefono = models.JSONField()
     direccion = models.CharField(max_length=100, blank=True)
-    correo = models.CharField(max_length=100, blank=True)
+    correo = models.CharField(max_length=100, blank=True, null=True)
     pagina_web = models.CharField(max_length=100, blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     activo = models.BooleanField(default=True)
@@ -42,7 +42,8 @@ class Entrega(models.Model):
     provedor_id = models.ForeignKey(Provedor, on_delete=models.DO_NOTHING)
     productos = models.JSONField(blank=True)
     comentarios = models.CharField(max_length=500, blank=True)
-    periodicidad = models.CharField(max_length=100, choices=periodo_CHOICES, blank=True)
+    periodicidad = models.CharField(
+        max_length=100, choices=periodo_CHOICES, blank=True)
     finalizado = models.BooleanField(default=False)
 
     def __str__(self):
