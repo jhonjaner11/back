@@ -38,28 +38,43 @@ class UsersView(APIView):
         print(kwargs)
         # object = JSONParser().parse(request)
 
-        try:
-            if kwargs['id']:
-                print("hay")
-                try:
-                    u = User.objects.get(pk=kwargs['id'])
+        # try:
+        if kwargs['id']:
+            print("hay")
+            print(kwargs['id'])
+            try:
+                u = User.objects.get(pk=kwargs['id'])
+                print(u)
 
-                    u.name = request.data['name']
+                if 'first_name' in request.data:
+                    u.first_name = request.data['first_name']
+                if 'last_name' in request.data:
+                    u.last_name = request.data['last_name']
+                if 'username' in request.data:
                     u.username = request.data['username']
+                if 'email' in request.data:
                     u.email = request.data['email']
+                if 'telefono' in request.data:
+                    u.telefono = request.data['telefono']
+
+                if 'password' in request.data:
                     u.password = request.data['password']
+
+                if 'rol' in request.data:
                     u.rol = Rol.objects.get(name=request.data['rol'])
-                    u.save()
+                if 'estado' in request.data:
+                    u.estado = request.data['estado']
+                u.save()
 
-                except User.DoesNotExist:
-                    print("except")
-                    return JsonResponse({'message': 'The User does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            except User.DoesNotExist:
+                print("except")
+                return JsonResponse({'message': 'The User does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-        except KeyError:
-            print("No hay")
-            print(object)
+        # except KeyError:
+        #     print("No hay")
+        #     print(KeyError)
 
-            return JsonResponse({'message': 'The User ID is not provided!'}, status=status.HTTP_404_NOT_FOUND)
+        #     return JsonResponse({'message': 'The User ID is not provided!'}, status=status.HTTP_404_NOT_FOUND)
 
         tutorial_serializer = UserSerializer(u)
 
@@ -78,7 +93,9 @@ class RegisterView(APIView):
     def post(self, request):
         print(request.data)
         u = User()
-        u.name = request.data['name']
+        u.first_name = request.data['first_name']
+        u.last_name = request.data['last_name']
+        u.telefono = request.data['telefono']
         u.username = request.data['username']
         u.email = request.data['email']
         u.password = request.data['password']
@@ -114,7 +131,8 @@ class LoginView(APIView):
             'username': user.username,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow(),
-            'name': user.name
+            'name': user.first_name,
+            'rol': user.rol.name
         }
 
         token = jwt.encode(payload, 'secret',
